@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import altair as alt
+import math
 
 st.set_page_config(page_title="Task 5: Human performance on JOKER wordplay classification",
                     page_icon=":black_joker:",
@@ -18,6 +19,18 @@ def get_excel_data():
 
 df = get_excel_data()
 count_all_entries = len(df)
+
+# for native speakers...
+def exp_helper(row):
+    if row["PLANG"] == "English":
+        return row["PAGE"]
+    elif math.isnan(row["PENGEXP"]):
+        return 0
+    else:
+        return row["PENGEXP"]
+
+df["PENGEXP"] = df.apply(exp_helper, axis=1)
+
 
 # --- sidebar ---
 st.sidebar.header("Filter here:")
@@ -68,6 +81,8 @@ count_users = len(df_users)
 st.title(":black_joker: Task 5: Human performance on JOKER wordplay classification")
 st.markdown("##")
 
+
+
 col1, col2, col3, col4 = st.columns(4)
 
 col1.metric("Classified wordplayes", count_all_entries)
@@ -87,7 +102,32 @@ Why is the survey and it's results interesting?
 
 ## III. METHODS
 
-Description of the survey, its questions, runtime, target audience etc.
+To determine human performance on the dataset, a survey was created and distributed to universities in different European countries: Gdansk (Poland), Kiel (Germany), Brest (France) and Cadiz (Spain). The survey was available for three weeks from 13.04.2023 to 04.05.2023. 
+
+In order to achieve a good result with the expected number of participants, 100 random entries were selected from the training dataset. The [sample](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.sample.html) function of pandas with random state 42 was used for this. Each user of the survey was given another random selection of 10 entries to rate. If an entry was identified as a pun, additional questions were asked conditionally about the character of the pun. A complete list of questions can be found below. 
+
+Users were able to participate in the survey more than once. To do this, respondents were first asked to generate a pseudonymous code that preserved the anonymity of the user but allowed identification across multiple surveys.  Besides the code, only a few questions were asked about the person: Age, mother tongue, country of origin and as a degree of English proficiency, the years the person has been speaking/learning English. These questions can be found in full detail in the list below:
+
+* Self-constructed code for identification between different survey runs (Short free text)
+* What's your first language? (List with options and comment)
+* If English is not your first language, how many years have you been speaking/learning English? (Numerical input)
+* Where do you come from? (List with options and comment)
+* How old are you? (Numerical input)
+* [For each of 10 randomly select entries: ]
+    *  Is this a wordplay? (Yes/No)
+    * [In case participant answered 'Yes': ]
+        * Which word is most important for the wordplay? (Short free text)
+        * Do you understand the wordplay? (Yes/No)
+        * Have you heard this wordplay before? (Yes/No)
+        * Is the wordplay funny? (Yes/No)
+        * Is the wordplay offensive? (Yes/No)
+        * Would you use this pun/wordplay in your everyday life? (Yes/No)
+        * Please translate the sentence(s)/wordplay into your first language. (Long free text)
+        * Do you have other comments on this sentence(s)? (Long free text)
+
+The survey was created with the software LimeSurvey and designed to be GDPR compliant (no recording of IP, data sparing, privacy statement etc.). 
+
+When evaluating the survey data, incomplete answers were also taken into account, provided that at least one entry was classified. The evaluation of the questions was done with Python ([pandas](https://pandas.pydata.org/docs/index.html), [scikit-learn](https://scikit-learn.org)). Only standard metrics (Precision, Recall, F1) were used for the evaluation. In the case of inter-rater reliability, Krippendorff's alpha was used for the evaluation because it allows calculation over more than two raters and is also suitable for binary classifications (Krippendorff 1970, 2008).
 
 ## IV. RESULTS
 
@@ -95,45 +135,55 @@ Neutral description of the results without interpretation.
 
 ### 4.1 Descriptive Results
 
+The descriptive statistics presented below are intended to provide a characterisation of the survey participants. It should be noted in particular that there are only few English native speakers in the survey, but there is a self-reported English language proficiency of 16.7 on average. 
+
+The largest proportions for country of origin and first language are Spain (19) and Germany (17) and Spanish (19) and German (17) respectively. Poland and France account for 10 and 9 participants respectively in terms of country of origin and first language. A few more participants come from the United States, Turkey, Russia, Trinidad and Tobago, and Austria. 
+
+The age distribution shows a wide range, with survey participants between 16 and 89 years old. Almost half (34 out of 73) of the participants are 23 or younger.
+
 """)
 
-# will be removed later on
-st.dataframe(df_users)
+tab1, tab2 = st.tabs(["Visualizations", "Raw Data"])
 
-col1, col2, col3 = st.columns(3)
+with tab1:
+    col1, col2, col3 = st.columns(3)
 
-# First language
-vals = pd.DataFrame(list(df_users["PLANG"].value_counts().to_dict().items()),
-                    columns=["First Language", "counts"])
+    # First language
+    vals = pd.DataFrame(list(df_users["PLANG"].value_counts().to_dict().items()),
+                        columns=["First Language", "counts"])
 
-c = alt.Chart(vals).mark_arc().encode(
-    color = alt.X("First Language:N"),
-    theta = "counts:Q",
-)
+    c = alt.Chart(vals).mark_arc().encode(
+        color = alt.X("First Language:N"),
+        theta = "counts:Q",
+    )
 
-col1.altair_chart(c, use_container_width=True)
+    col1.altair_chart(c, use_container_width=True)
 
-# Origin
-vals = pd.DataFrame(list(df_users["PORG"].value_counts().to_dict().items()),
-                    columns=["Origin Country", "counts"])
+    # Origin
+    vals = pd.DataFrame(list(df_users["PORG"].value_counts().to_dict().items()),
+                        columns=["Origin Country", "counts"])
 
-c = alt.Chart(vals).mark_arc().encode(
-    color = alt.X("Origin Country:N"),
-    theta = "counts:Q",
-)
+    c = alt.Chart(vals).mark_arc().encode(
+        color = alt.X("Origin Country:N"),
+        theta = "counts:Q",
+    )
 
-col2.altair_chart(c, use_container_width=True)
+    col2.altair_chart(c, use_container_width=True)
 
-# Age Distribution
-vals = pd.DataFrame(list(df_users["PAGE"].value_counts().to_dict().items()),
-                    columns=["Age", "counts"])
+    # Age Distribution
+    vals = pd.DataFrame(list(df_users["PAGE"].value_counts().to_dict().items()),
+                        columns=["Age", "counts"])
 
-c = alt.Chart(vals).mark_bar().encode(
-    x = alt.X("Age:N"),
-    y = "counts:Q",
-)
+    c = alt.Chart(vals).mark_bar().encode(
+        x = alt.X("Age:N"),
+        y = "counts:Q",
+    )
 
-col3.altair_chart(c, use_container_width=True)
+    col3.altair_chart(c, use_container_width=True)
+
+with tab2:
+    # will be removed later on
+    st.dataframe(df_users)
 
 # English Experience Distribution
 
