@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import altair as alt
 import math
+from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score
 
 st.set_page_config(page_title="Task 5: Human performance on JOKER wordplay classification",
                     page_icon=":black_joker:",
@@ -15,9 +16,14 @@ def get_excel_data():
         engine= 'openpyxl',
         sheet_name= 'Sheet1'
     )
-    return df
+    task5_selection = pd.read_excel(
+        io = 'data/task5_survey_selection.xlsx',
+        engine= 'openpyxl',
+        sheet_name= 'Sheet1'
+    )
+    return df, task5_selection
 
-df = get_excel_data()
+df, task5_selection = get_excel_data()
 count_all_entries = len(df)
 
 # for native speakers...
@@ -31,6 +37,17 @@ def exp_helper(row):
 
 df["PENGEXP"] = df.apply(exp_helper, axis=1)
 
+# add gold standard to each row
+def lookup_helper(wp_id, target):
+    val = task5_selection[task5_selection["id"] == wp_id]
+    return val.iloc[0][target]
+
+df["class"] = df["WP1"].apply(lambda x: lookup_helper(x, "wordplay"))
+df["location"] = df["WP1"].apply(lambda x: lookup_helper(x, "location"))
+
+# more prep
+df["WCLASS"] = df["WCLASS"].str.lower()
+df["WLOC"] = df["WLOC"].str.lower()
 
 # --- sidebar ---
 st.sidebar.header("Filter here:")
@@ -200,10 +217,23 @@ with tab2:
 st.markdown("""
 ### Perfomance evaluation
 
-Calculation of performance metrics for the human classification and comparison to machine learning algorithm.
+The human raters achieve the following performance when classifying the entries: 
 """)
 
-# F1, Recall and Precision on the data for classification
+# F1, Recall, Precision, Accuracy on the data for classification
+col1, col2, col3, col4 = st.columns(4)
+
+print(df["class"])
+print(df["WCLASS"])
+
+col1.metric("F1 Score", round(f1_score(df["class"], df["WCLASS"], average="binary", pos_label="yes"), 2))
+col2.metric("Precision", round(precision_score(df["class"], df["WCLASS"], average="binary", pos_label="yes"), 2))
+col3.metric("Recall", round(recall_score(df["class"], df["WCLASS"], average="binary", pos_label="yes"), 2))
+col4.metric("Accuracy", round(accuracy_score(df["class"], df["WCLASS"]), 2))
+
+st.markdown("""
+
+""")
 
 # F1, Recall and Precision on the data for word location
 
