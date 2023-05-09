@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import altair as alt
 import math
+import simpledorff
 from sklearn.metrics import f1_score, precision_score, recall_score, accuracy_score
 
 st.set_page_config(page_title="Task 5: Human performance on JOKER wordplay classification",
@@ -144,7 +145,7 @@ Users were able to participate in the survey more than once. To do this, respond
 
 The survey was created with the software LimeSurvey and designed to be GDPR compliant (no recording of IP, data sparing, privacy statement etc.). 
 
-When evaluating the survey data, incomplete answers were also taken into account, provided that at least one entry was classified. The evaluation of the questions was done with Python ([pandas](https://pandas.pydata.org/docs/index.html), [scikit-learn](https://scikit-learn.org)). Only standard metrics (Precision, Recall, F1) were used for the evaluation. In the case of inter-rater reliability, Krippendorff's alpha was used for the evaluation because it allows calculation over more than two raters and is also suitable for binary classifications (Krippendorff 1970, 2008).
+When evaluating the survey data, incomplete answers were also taken into account, provided that at least one entry was classified. The evaluation of the questions was done with Python ([pandas](https://pandas.pydata.org/docs/index.html), [scikit-learn](https://scikit-learn.org)). Only standard metrics (Precision, Recall, F1) were used for the evaluation. In the case of inter-rater reliability, Krippendorff's alpha (implemented in the python library [simpledorff](https://github.com/LightTag/simpledorff)) was used for the evaluation because it allows calculation over more than two raters and is also suitable for binary classifications (Krippendorff 1970, 2008). Krippendorff's alpha indicates the agreement of the codings with a value between 0 and 1, where 0 means no or a random match, while a value of 1 represents a perfect match (Hayes and Krippendorf, 2007). There are no generally accepted threshold values for a match to be considered good (Krippendorf, 2004). While some authors interpreted values from 0.61 as sufficient or "substantial agreement" (Landis and Koch, 1977), Krippendorff himself calls for values of 0.80 or better and allows values from 0.67 only "tentative conclusions" (Krippendorf 2004).
 
 ## IV. RESULTS
 
@@ -217,7 +218,10 @@ with tab2:
     # will be removed later on
     st.dataframe(df_users)
 
+"""
 
+
+"""
 
 # Understanding, preknowledge, funnieness, offensivness and life-usage as pies
 col1, col2, col3, col4, col5 = st.columns(5)
@@ -240,7 +244,10 @@ create_pie("WOFFENS","offensivness",col4)
 create_pie("WLIFE","life-usage",col5)
 
 st.markdown("""
-### Perfomance evaluation
+
+### 4.2 Human performance
+
+#### Classification of wordplays
 
 The human raters achieve the following performance when classifying the entries: 
 """)
@@ -254,6 +261,7 @@ col3.metric("Recall", round(recall_score(df["class"], df["WCLASS"], average="bin
 col4.metric("Accuracy", round(accuracy_score(df["class"], df["WCLASS"]), 2))
 
 st.markdown("""
+#### Localizing pun words
 
 """)
 
@@ -267,10 +275,28 @@ col3.metric("Recall", round(recall_score(df["location"].astype(str), df["WLOC"].
 col4.metric("Accuracy", round(accuracy_score(df["location"].astype(str), df["WLOC"].astype(str).astype(str)), 2))
 
 # Inter rater reliability
+irr = simpledorff.calculate_krippendorffs_alpha_for_df(df,experiment_col='WP1',
+                                                 annotator_col='CODE',
+                                                 class_col='WCLASS')
+print(irr)
 
+st.markdown("""
+#### Inter-rater reliability
 
-# Intra rater reliability
+The inter-rater reliability of the human classifiers across the entire data set is 0.19964 (Krippendorff's alpha). This value is far below the values that are commonly accepted as limits of good agreement (see methods section). 
 
+Thus, this value indicates only very low agreement among the human classifiers in the evaluation of wordplays.
+""")
+
+st.metric("IRR", round(irr, 3))
+
+st.markdown("""
+#### Intra-rater reliability
+
+Only 27 respondents rated the same entry twice, no entry was rated more than twice by a user; the small number does not allow any statement about how large the intra-rater reliability is, so that no calculation was made here. 
+""")
+#wp_per_user = df.pivot_table(columns=["CODE", "WP1"], aggfunc="size")
+#st.dataframe(wp_per_user)
 
 st.markdown("""
 ## Discussion

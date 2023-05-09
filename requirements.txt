@@ -2,3 +2,4 @@ pandas
 altair
 openpyxl
 scikit-learn
+simpledorff
