@@ -116,7 +116,14 @@ Why is the survey and it's results interesting?
 
 ## II. RELATED WORK
 
-@Ismael: What do we know about wordplays from a linguistic point of view? What *is* a wordplay? 
+### What even is a wordplay or pun?
+
+Puns are figures of speech that use similar-sounding words or phrases with multiple meanings to create a rhetorical effect, be it humorous or serious. This can involve causing a word, sentence, or discourse to involve two or more different meanings. Ambiguity, or the presence of more than one possible interpretation or meaning, is central to the concept of puns. There are different types of ambiguity involved in puns, such as lexical ambiguity (when a word has more than one meaning) and syntactic ambiguity (when a sentence can have more than one meaning due to its structure).
+
+From a linguistic point of view, signs consist of two parts: the signifier (the form the word takes) and the signified (the concept it represents). Homonyms occur when a single signifier has multiple signifieds, such as "bat" referring to both a small flying mammal and a piece of sports equipment. In the case of puns, a single signifier can represent multiple signifieds simultaneously, which can be a challenge for the mind to process.
+
+Puns are not limited to casual conversation or advertising; they can also be found in literature, particularly in poetry throughout history. For example, the first recorded pun in Western literature occurs in the ninth book of the Odyssey, in which the character Polyphemus mistakes the name "Nobody" for the name of the person who has blinded him.
+
 
 ## III. METHODS
 
@@ -219,8 +226,9 @@ with tab2:
     st.dataframe(df_users)
 
 """
+If respondents identified an entry as a pun, this was followed by several more questions aimed at further characterising the pun. The visualizations below summarize the results of these more in-depth questions: 
 
-
+Only about 14% of respondents had problems understanding an identified pun, although most were previously unknown (only 12% were previously known). Regarding the funniness, opinions are divided: Slightly more than half (52%) found the puns funny. Only a small proportion (5%) were perceived as offensive or objectionable. 26% of the puns were rated in a way that the respondents could imagine using them in real life.
 """
 
 # Understanding, preknowledge, funnieness, offensivness and life-usage as pies
