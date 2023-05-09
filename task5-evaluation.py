@@ -163,7 +163,7 @@ The age distribution shows a wide range, with survey participants between 16 and
 tab1, tab2 = st.tabs(["Visualizations", "Raw Data"])
 
 with tab1:
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     # First language
     vals = pd.DataFrame(list(df_users["PLANG"].value_counts().to_dict().items()),
@@ -196,23 +196,48 @@ with tab1:
         y = "counts:Q",
     )
 
-    col3.altair_chart(c, use_container_width=True)
+    col1, col2 = st.columns(2)
+
+    col1.altair_chart(c, use_container_width=True)
+
+    # English Experience Distribution
+
+    vals = pd.DataFrame(list(df_users["PENGEXP"].value_counts().to_dict().items()),
+                        columns=["English experience", "counts"])
+
+    c = alt.Chart(vals).mark_bar().encode(
+        x = alt.X("English experience:N"),
+        y = "counts:Q",
+    )
+
+    col2.altair_chart(c, use_container_width=True)
+
 
 with tab2:
     # will be removed later on
     st.dataframe(df_users)
 
-# English Experience Distribution
 
-#TODO
-
-# Classifications per wordplay
-
-#TODO
 
 # Understanding, preknowledge, funnieness, offensivness and life-usage as pies
+col1, col2, col3, col4, col5 = st.columns(5)
 
-#TODO
+def create_pie(element,name,coln):
+    vals = pd.DataFrame(list(df[element].value_counts().to_dict().items()),
+                        columns=[name, "counts"])
+
+    c = alt.Chart(vals).mark_arc().encode(
+        color = alt.X(name+":N"),
+        theta = "counts:Q",
+    )
+
+    coln.altair_chart(c, use_container_width=True)
+
+create_pie("WUNDER","understanding",col1)
+create_pie("WKNOWN","preknowledge",col2)
+create_pie("WFUNNY","funnieness",col3)
+create_pie("WOFFENS","offensivness",col4)
+create_pie("WLIFE","life-usage",col5)
 
 st.markdown("""
 ### Perfomance evaluation
@@ -222,9 +247,6 @@ The human raters achieve the following performance when classifying the entries:
 
 # F1, Recall, Precision, Accuracy on the data for classification
 col1, col2, col3, col4 = st.columns(4)
-
-print(df["class"])
-print(df["WCLASS"])
 
 col1.metric("F1 Score", round(f1_score(df["class"], df["WCLASS"], average="binary", pos_label="yes"), 2))
 col2.metric("Precision", round(precision_score(df["class"], df["WCLASS"], average="binary", pos_label="yes"), 2))
@@ -236,8 +258,16 @@ st.markdown("""
 """)
 
 # F1, Recall and Precision on the data for word location
+col1, col2, col3, col4 = st.columns(4)
+
+df["location"] = df["location"].str.lower()
+col1.metric("F1 Score", round(f1_score(df["location"].astype(str), df["WLOC"].astype(str), average="macro"), 2))
+col2.metric("Precision", round(precision_score(df["location"].astype(str), df["WLOC"].astype(str), average="macro"), 2))
+col3.metric("Recall", round(recall_score(df["location"].astype(str), df["WLOC"].astype(str), average="macro"), 2))
+col4.metric("Accuracy", round(accuracy_score(df["location"].astype(str), df["WLOC"].astype(str).astype(str)), 2))
 
 # Inter rater reliability
+
 
 # Intra rater reliability
 
