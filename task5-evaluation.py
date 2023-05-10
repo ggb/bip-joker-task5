@@ -112,7 +112,11 @@ col4.metric("English language experience in years", int(df_users["PENGEXP"].sum(
 st.markdown("""
 ## I. INTRODUCTION
 
-Why is the survey and it's results interesting?
+> Humour remains one of the most thorny aspects of intercultural communication. Understanding humour often requires recognition of implicit cultural references or, especially in the case of wordplay, knowledge of word formation processes and discernment of double meanings. These issues raise the question not only of how to translate humour across cultures and languages, but also how to even recognise it in the first place. Such tasks are challenging for humans and computers alike. (Ermakova et al., 2023)
+
+The fact that humour understanding is one of the most difficult application fields of automatic natural language processing is the starting point of the CLEF JOKER track. In the course of dealing with the data sets and trying to solve the tasks, we asked ourselves the question: How good would humans be at these tasks? Because as Ermakova (2023) already states, humour is already a thorny aspect of intercultural communication in general. And if humans already have problems with it, what performance can we expect from machine learning models?
+
+We try to explore these questions in the following. To do this, we created a survey with a random selection of the JOKER training dataset and distributed it to various European universities. In addition to the classification of the puns, we also asked the respondents for the localisation of the pun words and asked further questions in the context of the puns, e.g. about their relevance to the living world. The results once again confirm our expectations: Humour and puns are difficult, not only for machines, but also for humans. This is particularly evident in the low inter-rater reliability of the data set we collected.
 
 ## II. THEORETICAL BACKGROUND
 
@@ -323,8 +327,21 @@ Only 27 respondents rated the same entry twice, no entry was rated more than twi
 st.markdown("""
 ## V. DISCUSSION
 
-What do we learn from the results? What is interesting and deserves further investigation? Were are the limitations of our work?
+The evaluation of the human classification of puns shows some interesting results: The F1 score of 0.74 and an accuracy of 0.69 is less high than one would initially expect, suggesting that humans also have problems to some extent in assessing the entries in the dataset. At the same time, the level of agreement among raters is very low. However, given Medelyan's (2009) observations above, it is consistent with expectations regarding untrained, non-native human raters. Of course, it should also be noted that humour is in the eye of the beholder and depends very much on cultural and linguistic circumstances and prior experience. Since people from several European and non-European countries took part in the survey, a variety of assessments can be expected accordingly. Another indication of this is provided by the assessments of the puns: Only a few were known beforehand and opinions regarding their funniness vary widely; moreover, the puns do not seem to be convincing enough for the respondents to adopt them into their own linguistic vocabulary. 
 
+The situation is even more difficult for the localisation task. The low F1 score achieved by human raters can be beaten by a simple machine strategy: choosing the last word of the pun achieves an F1 score of 0.35. A system that erroneously learns to identify as pun word the last word of a pun is thus better at this task than a human. However, this may be a hasty conclusion: a look at the data shows that a not insignificant proportion of respondents completely omitted the pun word when classifying an entry as a pun. So it is probably due in no small part to the nature of surveys that the results do not turn out so well. While a human being has the choice not to give an answer, a machine guesser is always obliged to do so. 
+
+So, overall, what can be expected from machines in terms of recognising puns and humour in general? Not much, or to put it another way: Just as little as from humans. The fact that humour is in the eye of the beholder ensures that it is a chronically difficult field in which even the processing of natural language by algorithms reaches its limits. A model that performs better than humans at this task would possibly and depending on the field of application be useless in actual use. When Alpha Go beat South Korean Lee Sedol, one of the world's top professional Go players, its gameplay was described by [some commentators](https://www.alphagomovie.com/) as alien-like. While such behaviour might be okay in a closed environment like a board game, it would lead to significant problems in social contexts. A socially interacting AI that was too good at understanding and expressing humour could lead to a similar effect, an "[uncanny valley](https://en.wikipedia.org/wiki/Uncanny_valley)" of social interaction.
+
+### Limitations
+
+Although participants from a number of different countries were recruited for this survey and a total of over 500 entries were classified, the greatest limitation of the analysis is the small data base. For further analyses and more reliable statements, a new and more extensive survey would be necessary. Furthermore, not only 100 randomly selected questions should be distributed, but if possible significantly more. 
+
+The questionnaire should be further developed on the basis of the questions collected. For example, it was expressed in personal contact that the translation of the phrases, an aspect that was not used for the above evaluation, was often difficult due to the distance between input and entry on the screen page. Although the intention was to design a questionnaire that could be completed quickly, in reality it proved to take longer than expected to answer: The evaluation of 10 entries and the answering of further questions in the case of identifying puns, proved to be more extensive than hoped.
+
+## VI. CONCLUSION
+
+Participants from various European and non-European countries took part in our survey on the evaluation of puns. The results show once again that the evaluation of humour and puns is not easy — not only for algorithms, but also for humans. Our analysis thus provides another reference point for classifying and evaluating the future development of algorithms in this environment.
 
 ## LITERATURE
 
