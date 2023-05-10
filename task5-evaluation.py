@@ -362,6 +362,7 @@ Participants from various European and non-European countries took part in our s
 * ———. 2008. „Systematic and Random Disagreement and the Reliability of Nominal Data“. Communication Methods and Measures. https://doi.org/10.1080/19312450802467134.
 * Landis, J Richard, und Gary G Koch. 1977. „The measurement of observer agreement for categorical data“. biometrics. JSTOR.
 * Luu, Chi. 2015. „Linguistic Anarchy! It’s all Pun and Games Until Somebody Loses a Sign“. JSTOR Daily. https://daily.jstor.org/linguistic-anarchy-pun-games-somebody-loses-sign/.
+* Medelyan, Olena. 2009. „Human-competitive automatic topic indexing“. The University of Waikato.
 * Sergeevna Igasheva, Anastasiia. 2019. „LINGUISTIC PECULIARITIES OF PUN, ITS TYPOLOGY AND CLASSIFICATION“. In Education, innovation, research as a resource for community development. Publishing house Sreda. https://doi.org/10.31483/r-32974.
 
 """)
