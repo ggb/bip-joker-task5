@@ -97,8 +97,8 @@ count_users = len(df_users)
 
 # --- Mainpage ---
 st.title(":black_joker: Task 5: Human performance on JOKER wordplay classification")
+st.subheader("by TheLangVerse (Gregor Große-Bölting, Anna Ledworowska and Ismael Cross Moreno)")
 st.markdown("##")
-
 
 
 col1, col2, col3, col4 = st.columns(4)
@@ -114,15 +114,25 @@ st.markdown("""
 
 Why is the survey and it's results interesting?
 
-## II. RELATED WORK
+## II. THEORETICAL BACKGROUND
 
-### What even is a wordplay or pun?
+In order to contextualise the results, we would first like to discuss research findings related to this work, which will enable us to frame the results below. We will then briefly discuss the nature of puns and wordplays, what makes them special and especially difficult in the machine learning environment — a matter we will return to in the discussion. 
 
-Puns are figures of speech that use similar-sounding words or phrases with multiple meanings to create a rhetorical effect, be it humorous or serious. This can involve causing a word, sentence, or discourse to involve two or more different meanings. Ambiguity, or the presence of more than one possible interpretation or meaning, is central to the concept of puns. There are different types of ambiguity involved in puns, such as lexical ambiguity (when a word has more than one meaning) and syntactic ambiguity (when a sentence can have more than one meaning due to its structure).
+### Related work
 
-From a linguistic point of view, signs consist of two parts: the signifier (the form the word takes) and the signified (the concept it represents). Homonyms occur when a single signifier has multiple signifieds, such as "bat" referring to both a small flying mammal and a piece of sports equipment. In the case of puns, a single signifier can represent multiple signifieds simultaneously, which can be a challenge for the mind to process.
+In her PhD thesis, Medelyan (2009) investigated how human performance in extracting keyphrases from human scientific texts compares with machine processes, including the Maui alogrithm she developed. Among other things, she finds that human inter-rater reliability varies between 18.5\% and 37.8\%, depending on the rater's expertise and language knowledge in the application domain. They were able to show that the Maui algorithm achieves comparable or (slightly) better performance than human raters in many cases. Building on these results, Große-Bölting et al. (2015) were able to show that the results can be further improved in some cases; Galke et al. (2017) were subsequently able to achieve further improvements through the use of neural networks that are far above the usual performance of human raters in the same task domain.
 
-Puns are not limited to casual conversation or advertising; they can also be found in literature, particularly in poetry throughout history. For example, the first recorded pun in Western literature occurs in the ninth book of the Odyssey, in which the character Polyphemus mistakes the name "Nobody" for the name of the person who has blinded him.
+Blohm et al. (2020) compare the performance of automated machine learning tools (AutoML) with that of human raters for thirteen different publicly available datasets covering a range of different text classification tasks, such as sentiment analysis or identification of fake news. The authors conclude that in most (9 out of 13) cases AutoML is not able to beat human ratings. However, there are cases where this is already possible and the authors see the differences narrowing as machine learning develops. 
+
+Dodge and Karam (2017) discuss another interesting use case for comparing machine and human classification, the evaluation or content detection of images under conditions of visual distortion. The authors note that image recognition by deep neural networks (DNNs) has reached a very advanced stage of development and accordingly achieves performance comparable to humans in most cases. However, the training data is mostly of high quality and has little bias or error. Therefore, the researchers had 15 human raters evaluate corresponding images and compared the results with different DNNs: The results show impressively that the performance without disturbances is the same for humans and DNNs, but with increasing disturbances (noise and blur) the humans show a significantly higher recognition accuracy.
+
+### On puns and wordplays
+
+Puns are figures of speech that use similar-sounding words or phrases with multiple meanings to create a rhetorical effect, be it humorous or serious ([Merriam-Webster](https://www.merriam-webster.com/dictionary/pun), 2023). This can involve causing a word, sentence, or discourse to involve two or more different meanings. Ambiguity, or the presence of more than one possible interpretation or meaning, is central to the concept of puns. There are different types of ambiguity involved in puns, such as lexical ambiguity (when a word has more than one meaning) and syntactic ambiguity (when a sentence can have more than one meaning due to its structure) (Luu, 2015).
+
+From a linguistic point of view, signs consist of two parts: the signifier (the form the word takes) and the signified (the concept it represents). Homonyms occur when a single signifier has multiple signifieds, such as "bat" referring to both a small flying mammal and a piece of sports equipment. In the case of puns, a single signifier can represent multiple signifieds simultaneously, which can be a challenge for the mind to process (Igasheva, 2019).
+
+Puns are not limited to casual conversation or advertising; they can also be found in literature, particularly in poetry throughout history. For example, the first recorded pun in Western literature occurs in the ninth book of the Odyssey, in which the character Polyphemus mistakes the name "Nobody" for the name of the person who has blinded him (Luu, 2015).
 
 
 ## III. METHODS
@@ -255,9 +265,11 @@ st.markdown("""
 
 ### 4.2 Human performance
 
+In the following, human performance in the evaluation and localisation of pun words in word games is considered. In addition, the inter-rater reliability with regard to classification is presented.
+
 #### Classification of wordplays
 
-The human raters achieve the following performance when classifying the entries: 
+For the classification of the puns, the human raters were shown a random entry from the dataset of previously 100 randomly selected entries from the training dataset and asked the simple question: Is this a wordplay? Only 'yes' and 'no' were available as answer options; unlike all other binary questions, no option was given not to answer this question. The performance of the human raters is as follows: 
 """)
 
 # F1, Recall, Precision, Accuracy on the data for classification
@@ -270,6 +282,8 @@ col4.metric("Accuracy", round(accuracy_score(df["class"], df["WCLASS"]), 2))
 
 st.markdown("""
 #### Localizing pun words
+
+The localisation of pun words is a difficult linguistic task. For the following analysis, no further cleaning was done on the data, i.e. an exact match between the test data and the human ratings was required. 
 
 """)
 
@@ -307,8 +321,13 @@ Only 27 respondents rated the same entry twice, no entry was rated more than twi
 #st.dataframe(wp_per_user)
 
 st.markdown("""
-## Discussion
+## V. DISCUSSION
 
 What do we learn from the results? What is interesting and deserves further investigation? Were are the limitations of our work?
+
+
+## LITERATURE
+
+
 """)
 
