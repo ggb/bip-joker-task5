@@ -116,7 +116,7 @@ st.markdown("""
 
 The fact that humour understanding is one of the most difficult application fields of automatic natural language processing is the starting point of the CLEF JOKER track. In the course of dealing with the data sets and trying to solve the tasks, we asked ourselves the question: How good would humans be at these tasks? Because as Ermakova (2023) already states, humour is already a thorny aspect of intercultural communication in general. And if humans already have problems with it, what performance can we expect from machine learning models?
 
-We try to explore these questions in the following. To do this, we created a survey with a random selection of the JOKER training dataset and distributed it to various European universities. In addition to the classification of the puns, we also asked the respondents for the localisation of the pun words and asked further questions in the context of the puns, e.g. about their relevance to the living world. The results once again confirm our expectations: Humour and puns are difficult, not only for machines, but also for humans. This is particularly evident in the low inter-rater reliability of the data set we collected.
+We try to explore these questions in the following. To do this, we created a survey with a random selection of the JOKER training dataset and distributed it to various European universities. In addition to the classification of the puns, we also asked the respondents for the localisation of the pun words and asked further questions in the context of the puns, e.g. about their relevance to the real life. The results once again confirm our expectations: Humour and puns are difficult, not only for machines, but also for humans. This is particularly evident in the low inter-rater reliability of the data set we collected.
 
 ## II. THEORETICAL BACKGROUND
 
@@ -182,7 +182,7 @@ The age distribution shows a wide range, with survey participants between 16 and
 
 """)
 
-tab1, tab2 = st.tabs(["Visualizations", "Raw Data"])
+tab1, tab2 = st.tabs(["Visualizations", "Raw User Data"])
 
 with tab1:
     col1, col2 = st.columns(2)
@@ -245,25 +245,31 @@ If respondents identified an entry as a pun, this was followed by several more q
 Only about 14% of respondents had problems understanding an identified pun, although most were previously unknown (only 12% were previously known). Regarding the funniness, opinions are divided: Slightly more than half (52%) found the puns funny. Only a small proportion (5%) were perceived as offensive or objectionable. 26% of the puns were rated in a way that the respondents could imagine using them in real life.
 """
 
-# Understanding, preknowledge, funnieness, offensivness and life-usage as pies
-col1, col2, col3, col4, col5 = st.columns(5)
+tab1, tab2 = st.tabs(["Visualizations", "Raw Wordplay Data"])
 
-def create_pie(element,name,coln):
-    vals = pd.DataFrame(list(df[element].value_counts().to_dict().items()),
-                        columns=[name, "counts"])
+with tab1:
+    # Understanding, preknowledge, funnieness, offensivness and life-usage as pies
+    col1, col2, col3, col4, col5 = st.columns(5)
 
-    c = alt.Chart(vals).mark_arc().encode(
-        color = alt.X(name+":N"),
-        theta = "counts:Q",
-    )
+    def create_pie(element,name,coln):
+        vals = pd.DataFrame(list(df[element].value_counts().to_dict().items()),
+                            columns=[name, "counts"])
 
-    coln.altair_chart(c, use_container_width=True)
+        c = alt.Chart(vals).mark_arc().encode(
+            color = alt.X(name+":N"),
+            theta = "counts:Q",
+        )
 
-create_pie("WUNDER","understanding",col1)
-create_pie("WKNOWN","preknowledge",col2)
-create_pie("WFUNNY","funnieness",col3)
-create_pie("WOFFENS","offensivness",col4)
-create_pie("WLIFE","life-usage",col5)
+        coln.altair_chart(c, use_container_width=True)
+
+    create_pie("WUNDER","understanding",col1)
+    create_pie("WKNOWN","preknowledge",col2)
+    create_pie("WFUNNY","funnieness",col3)
+    create_pie("WOFFENS","offensivness",col4)
+    create_pie("WLIFE","life-usage",col5)
+
+with tab2: 
+    st.dataframe(df)
 
 st.markdown("""
 
@@ -345,6 +351,18 @@ Participants from various European and non-European countries took part in our s
 
 ## LITERATURE
 
+* Blohm, Matthias, Marc Hanussek, und Maximilien Kintz. 2020. „Leveraging Automated Machine Learning for Text Classification: Evaluation of AutoML Tools and Comparison with Human Performance“.
+* Dodge, Samuel, und Lina Karam. 2017. „A Study and Comparison of Human and Deep Learning Recognition Performance under Visual Distortions“. In 2017 26th International Conference on Computer Communication and Networks (ICCCN). IEEE. https://doi.org/10.1109/icccn.2017.8038465.
+* Ermakova, Liana, Tristan Miller, Anne-Gwenn Bosser, Victor Manuel Palma Preciado, Grigori Sidorov, und Adam Jatowt. 2023. „Science For Fun: The CLEF 2023 JOKER Track On Automatic Wordplay Analysis“. In Advances in Information Retrieval: 45th European Conference on Information Retrieval, ECIR 2023, Dublin, Ireland, April 2–6, 2023, Proceedings, Part III, 546–56. Berlin, Heidelberg: Springer-Verlag. https://doi.org/10.1007/978-3-031-28241-6_63.
+* Galke, Lukas, Florian Mai, Alan Schelten, Dennis Brunsch, und Ansgar Scherp. 2017. „Using Titles vs. Full-Text as Source for Automated Semantic Document Annotation“. In Proceedings of the Knowledge Capture Conference. K-CAP 2017. New York, NY, USA: Association for Computing Machinery. https://doi.org/10.1145/3148011.3148039.
+* Große-Bölting, Gregor, Chifumi Nishioka, und Ansgar Scherp. 2015. „A Comparison of Different Strategies for Automated Semantic Document Annotation“. In Proceedings of the 8th International Conference on Knowledge Capture. K-CAP 2015. New York, NY, USA: Association for Computing Machinery. https://doi.org/10.1145/2815833.2815838.
+* Hayes, Andrew F, und Klaus Krippendorff. 2007. „Answering the call for a standard reliability measure for coding data“. Communication methods and measures. Taylor & Francis.
+* Krippendorff, Klaus. 1970. „Estimating the Reliability, Systematic Error and Random Error of Interval Data“. Educational and Psychological Measurement. https://doi.org/10.1177/001316447003000105.
+* ———. 2004. „Reliability in content analysis: Some common misconceptions and recommendations“. Human communication research. Wiley Online Library.
+* ———. 2008. „Systematic and Random Disagreement and the Reliability of Nominal Data“. Communication Methods and Measures. https://doi.org/10.1080/19312450802467134.
+* Landis, J Richard, und Gary G Koch. 1977. „The measurement of observer agreement for categorical data“. biometrics. JSTOR.
+* Luu, Chi. 2015. „Linguistic Anarchy! It’s all Pun and Games Until Somebody Loses a Sign“. JSTOR Daily. https://daily.jstor.org/linguistic-anarchy-pun-games-somebody-loses-sign/.
+* Sergeevna Igasheva, Anastasiia. 2019. „LINGUISTIC PECULIARITIES OF PUN, ITS TYPOLOGY AND CLASSIFICATION“. In Education, innovation, research as a resource for community development. Publishing house Sreda. https://doi.org/10.31483/r-32974.
 
 """)
 
